@@ -1,7 +1,7 @@
 {
-    "name": "hello-gbdx-chambbj",
-    "version": "0.0.9",
-    "description": "Writes list of the input file names and a user defined message to output file out.txt.",
+    "name": "ShorelineDetection",
+    "version": "0.0.1",
+    "description": "Writes tide prediction JSON, shoreline GeoJSON, and NDWI GeoTIFF.",
     "properties": {
         "isPublic": true,
         "timeout": 7200
@@ -10,35 +10,41 @@
         {
             "name": "lat",
             "type": "string",
-            "description": "Latitude.",
+            "description": "Latitude of image centroid (tide prediction).",
             "required": true
         },
         {
             "name": "lon",
             "type": "string",
-            "description": "Longitude.",
+            "description": "Longitude of image centroid (tide prediction).",
             "required": true
         },
         {
             "name": "dtg",
             "type": "string",
-            "description": "Date time group (Y-m-d-H-M).",
+            "description": "Date time group (Y-m-d-H-M) of image collection (tide prediction).",
+            "required": true
+        },
+        {
+            "name": "image",
+            "type": "directory",
+            "description": "The multispectral image (NDWI and shoreline detection).",
             "required": true
         }
     ],
     "outputPortDescriptors": [
         {
-            "name": "json",
+            "name": "results",
             "type": "directory",
-            "description": "The tide data."
+            "description": "Output directory containing results (predicted tides, shoreline vector, and NDWI raster)."
         }
     ],
     "containerDescriptors": [
         {
             "type": "DOCKER",
             "properties": {
-                "image": "chambbj/hello-gbdx"
+                "image": "venicegeo/shoreline-task"
             },
-            "command": "python /hello-gbdx.py"        }
+            "command": "python /shoreline-task.py"        }
     ]
 }

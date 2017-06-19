@@ -1,0 +1,15 @@
+name: shoreline
+channels:
+  - Coastline
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  # bfalg-ndwi dependencies
+  - libagg=2.5.0
+  - bfalg-ndwi
+  - glob2
+  # bf-tideprediction dependencies
+  - dill
+  - pip:
+    - pytides

@@ -1,6 +1,0 @@
-dill
-numpy>=1.9.1
-pytides
-git+https://github.com/gipit/gippy.git@develop
-git+https://github.com/venicegeo/beachfront-py.git@master
-git+https://github.com/flupke/pypotrace.git@master
