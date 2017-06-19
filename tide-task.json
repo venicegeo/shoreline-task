@@ -1,0 +1,44 @@
+{
+    "name": "hello-gbdx-chambbj",
+    "version": "0.0.9",
+    "description": "Writes list of the input file names and a user defined message to output file out.txt.",
+    "properties": {
+        "isPublic": true,
+        "timeout": 7200
+    },
+    "inputPortDescriptors": [
+        {
+            "name": "lat",
+            "type": "string",
+            "description": "Latitude.",
+            "required": true
+        },
+        {
+            "name": "lon",
+            "type": "string",
+            "description": "Longitude.",
+            "required": true
+        },
+        {
+            "name": "dtg",
+            "type": "string",
+            "description": "Date time group (Y-m-d-H-M).",
+            "required": true
+        }
+    ],
+    "outputPortDescriptors": [
+        {
+            "name": "json",
+            "type": "directory",
+            "description": "The tide data."
+        }
+    ],
+    "containerDescriptors": [
+        {
+            "type": "DOCKER",
+            "properties": {
+                "image": "chambbj/hello-gbdx"
+            },
+            "command": "python /hello-gbdx.py"        }
+    ]
+}
