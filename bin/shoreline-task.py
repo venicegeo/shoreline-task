@@ -253,8 +253,11 @@ class ShorelineTask(GbdxTaskInterface):
         smooth = self.get_input_string_port('smooth', default='1.0')
         img = self.get_input_data_port('image')
 
-        output_dir = self.get_output_data_port('results')
-        os.makedirs(output_dir)
+        vector_dir = self.get_output_data_port('vector')
+        os.makedirs(vector_dir)
+
+        raster_dir = self.get_output_data_port('raster')
+        os.makedirs(raster_dir)
 
         tide = tide_coordination(float(lat), float(lon), dtg)
 
@@ -272,13 +275,16 @@ class ShorelineTask(GbdxTaskInterface):
 
         for img_file in all_files:
             os.system('bfalg-ndwi -i %s -b 1 8 --outdir %s --basename bf --minsize %s --smooth %s' %
-                      (img_file, output_dir, minsize, smooth))
+                      (img_file, vector_dir, minsize, smooth))
+
+        os.rename(os.path.join(vector_dir, 'bf_ndwi.tif'),
+                  os.path.join(raster_dir, 'bf_ndwi.tif'))
 
         # Okay, so we need to open the output bf.geojson here, and iterate
         # through the features, added result to properties for each and every
         # one.
 
-        with open(os.path.join(output_dir, 'bf.geojson')) as f:
+        with open(os.path.join(vector_dir, 'bf.geojson')) as f:
             data = geojson.load(f)
 
         feature_collection = data['features']
@@ -290,7 +296,7 @@ class ShorelineTask(GbdxTaskInterface):
 
         data['features'] = valid_feats
 
-        with open(os.path.join(output_dir, 'bf.geojson'), 'wb') as f:
+        with open(os.path.join(vector_dir, 'bf.geojson'), 'wb') as f:
             geojson.dump(data, f)
 
 
