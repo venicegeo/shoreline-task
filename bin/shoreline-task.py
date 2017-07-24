@@ -249,6 +249,8 @@ class ShorelineTask(GbdxTaskInterface):
         lon = self.get_input_string_port('lon')
         dtg = self.get_input_string_port('dtg')
         meta = self.get_input_string_port('meta')
+        minsize = self.get_input_string_port('minsize', default='1000.0')
+        smooth = self.get_input_string_port('smooth', default='1.0')
         img = self.get_input_data_port('image')
 
         output_dir = self.get_output_data_port('results')
@@ -269,8 +271,8 @@ class ShorelineTask(GbdxTaskInterface):
         all_files = all_lower + all_upper
 
         for img_file in all_files:
-            os.system('bfalg-ndwi -i %s -b 1 8 --outdir %s --basename bf' %
-                      (img_file, output_dir))
+            os.system('bfalg-ndwi -i %s -b 1 8 --outdir %s --basename bf --minsize %s --smooth %s' %
+                      (img_file, output_dir, minsize, smooth))
 
         # Okay, so we need to open the output bf.geojson here, and iterate
         # through the features, added result to properties for each and every
