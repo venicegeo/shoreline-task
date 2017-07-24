@@ -1,6 +1,6 @@
 {
     "name": "ShorelineDetection_beta",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Writes tide prediction JSON, shoreline GeoJSON, and NDWI GeoTIFF.",
     "properties": {
         "isPublic": true,
@@ -30,6 +30,18 @@
             "type": "string",
             "description": "Acquisition metadata.",
             "required": true
+        },
+        {
+            "name": "minsize",
+            "type": "string",
+            "description": "Minimum coastline enclosed area/speckle suppression. (Default: 1000.0 pixels)",
+            "required": false
+        },
+        {
+            "name": "smooth",
+            "type": "string",
+            "description": "Corner smoothing from 0 (no smoothing) to 1.33 (no corners). (Default: 1.0)",
+            "required": false
         },
         {
             "name": "image",
