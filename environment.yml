@@ -13,3 +13,4 @@ dependencies:
   - dill
   - pip:
     - pytides
+    - geojson

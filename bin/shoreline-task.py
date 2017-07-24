@@ -19,6 +19,7 @@ import json
 import math
 import os
 import sqlite3
+import geojson
 
 import dill
 import numpy as np
@@ -247,15 +248,21 @@ class ShorelineTask(GbdxTaskInterface):
         lat = self.get_input_string_port('lat')
         lon = self.get_input_string_port('lon')
         dtg = self.get_input_string_port('dtg')
+        meta = self.get_input_string_port('meta')
         img = self.get_input_data_port('image')
 
         output_dir = self.get_output_data_port('results')
         os.makedirs(output_dir)
 
-        result = tide_coordination(float(lat), float(lon), dtg)
+        tide = tide_coordination(float(lat), float(lon), dtg)
 
-        with open(os.path.join(output_dir, 'tides.json'), 'w') as f:
-            json.dump(result, f)
+        result = {
+            'metadata': json.loads(meta),
+            'tides': tide
+        }
+
+        # with open(os.path.join(output_dir, 'tides.json'), 'w') as f:
+        #     json.dump(result, f)
 
         all_lower = glob2.glob('%s/**/*.tif' % img)
         all_upper = glob2.glob('%s/**/*.TIF' % img)
@@ -264,6 +271,25 @@ class ShorelineTask(GbdxTaskInterface):
         for img_file in all_files:
             os.system('bfalg-ndwi -i %s -b 1 8 --outdir %s --basename bf' %
                       (img_file, output_dir))
+
+        # Okay, so we need to open the output bf.geojson here, and iterate
+        # through the features, added result to properties for each and every
+        # one.
+
+        with open(os.path.join(output_dir, 'bf.geojson')) as f:
+            data = geojson.load(f)
+
+        feature_collection = data['features']
+        valid_feats = []
+
+        for feat in feature_collection:
+            feat['properties'] = result
+            valid_feats.append(feat)
+
+        data['features'] = valid_feats
+
+        with open(os.path.join(output_dir, 'bf.geojson'), 'wb') as f:
+            geojson.dump(data, f)
 
 
 if __name__ == "__main__":
