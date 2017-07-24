@@ -1,6 +1,6 @@
 {
-    "name": "ShorelineDetection",
-    "version": "0.0.1",
+    "name": "ShorelineDetection_beta",
+    "version": "0.0.4",
     "description": "Writes tide prediction JSON, shoreline GeoJSON, and NDWI GeoTIFF.",
     "properties": {
         "isPublic": true,
@@ -26,6 +26,12 @@
             "required": true
         },
         {
+            "name": "meta",
+            "type": "string",
+            "description": "Acquisition metadata.",
+            "required": true
+        },
+        {
             "name": "image",
             "type": "directory",
             "description": "The multispectral image (NDWI and shoreline detection).",
@@ -45,6 +51,7 @@
             "properties": {
                 "image": "venicegeo/shoreline-task"
             },
-            "command": "python /shoreline-task.py"        }
+            "command": "python /shoreline-task.py"
+        }
     ]
 }
