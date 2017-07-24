@@ -1,6 +1,6 @@
 {
     "name": "ShorelineDetection_beta",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Writes tide prediction JSON, shoreline GeoJSON, and NDWI GeoTIFF.",
     "properties": {
         "isPublic": true,
@@ -52,9 +52,14 @@
     ],
     "outputPortDescriptors": [
         {
-            "name": "results",
+            "name": "vector",
             "type": "directory",
-            "description": "Output directory containing results (predicted tides, shoreline vector, and NDWI raster)."
+            "description": "Output directory containing vector data."
+        },
+        {
+            "name": "raster",
+            "type": "directory",
+            "description": "Output directory containing NDWI raster."
         }
     ],
     "containerDescriptors": [
