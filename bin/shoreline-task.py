@@ -299,6 +299,8 @@ class ShorelineTask(GbdxTaskInterface):
         with open(os.path.join(vector_dir, 'bf.geojson'), 'wb') as f:
             geojson.dump(data, f)
 
+        self.reason = 'Successfully created shoreline GeoJSON'
+
 
 if __name__ == "__main__":
     with ShorelineTask() as task:
