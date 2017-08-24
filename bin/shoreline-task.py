@@ -11,19 +11,23 @@
 # details.
 
 from __future__ import print_function
+from gbdx_auth import gbdx_auth
 
 from cStringIO import StringIO
 from datetime import datetime
+import dateutil.parser
 import glob2
-import json
 import math
 import os
+import requests
 import sqlite3
 import geojson
 
 import dill
 import numpy as np
 from pytides.tide import Tide
+from shapely.geometry import shape
+from shapely.wkt import loads
 
 from gbdx_task_interface import GbdxTaskInterface
 
@@ -241,17 +245,30 @@ TIDE_MODEL = build_tide_models(tide_model)
 
 
 class ShorelineTask(GbdxTaskInterface):
+    gbdx_connection = None
 
     def invoke(self):
 
+        self.gbdx_connection = gbdx_auth.session_from_existing_token(
+            self.get_runtime_info('user_token')
+        )
+
         # Get inputs
-        lat = self.get_input_string_port('lat')
-        lon = self.get_input_string_port('lon')
-        dtg = self.get_input_string_port('dtg')
-        meta = self.get_input_string_port('meta')
+        cat_id = self.get_input_string_port('cat_id')
         minsize = self.get_input_string_port('minsize', default='1000.0')
         smooth = self.get_input_string_port('smooth', default='1.0')
         img = self.get_input_data_port('image')
+
+        url = 'https://geobigdata.io/catalog/v2/record/%s' % cat_id
+        r = self.gbdx_connection.get(url)
+        r.raise_for_status()
+        record = r.json()
+        centroid = loads(record.get('properties').get('footprintWkt')).centroid
+        lat = centroid.y
+        lon = centroid.x
+        timestamp = dateutil.parser.parse(
+            record.get('properties').get('timestamp'))
+        dtg = datetime.strftime(timestamp, '%Y-%m-%d-%H-%M')
 
         vector_dir = self.get_output_data_port('vector')
         os.makedirs(vector_dir)
@@ -262,12 +279,9 @@ class ShorelineTask(GbdxTaskInterface):
         tide = tide_coordination(float(lat), float(lon), dtg)
 
         result = {
-            'metadata': json.loads(meta),
+            'metadata': record,
             'tides': tide
         }
-
-        # with open(os.path.join(output_dir, 'tides.json'), 'w') as f:
-        #     json.dump(result, f)
 
         all_lower = glob2.glob('%s/**/*.tif' % img)
         all_upper = glob2.glob('%s/**/*.TIF' % img)
