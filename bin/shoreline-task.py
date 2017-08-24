@@ -283,13 +283,22 @@ class ShorelineTask(GbdxTaskInterface):
             'tides': tide
         }
 
-        all_lower = glob2.glob('%s/**/*.tif' % img)
-        all_upper = glob2.glob('%s/**/*.TIF' % img)
-        all_files = all_lower + all_upper
+        platform = record.get('properties').get('platformName')
+        print("Platform detected as", platform)
+        if platform in ('WORLDVIEW02', 'WORLDVIEW03'):
+            all_lower = glob2.glob('%s/**/*.tif' % img)
+            all_upper = glob2.glob('%s/**/*.TIF' % img)
+            all_files = all_lower + all_upper
 
-        for img_file in all_files:
-            os.system('bfalg-ndwi -i %s -b 1 8 --outdir %s --basename bf --minsize %s --smooth %s' %
-                      (img_file, vector_dir, minsize, smooth))
+            for img_file in all_files:
+                os.system('bfalg-ndwi -i %s -b 1 8 --outdir %s --basename bf --minsize %s --smooth %s' %
+                          (img_file, vector_dir, minsize, smooth))
+        elif platform == 'LANDSAT08':
+            img1 = glob2.glob('%s/**/*_B1.TIF' % img)
+            img2 = glob2.glob('%s/**/*_B5.TIF' % img)
+
+            os.system('bfalg-ndwi -i %s -i %s --outdir %s --basename bf --minsize %s --smooth %s' %
+                      (img1[0], img2[0], vector_dir, minsize, smooth))
 
         os.rename(os.path.join(vector_dir, 'bf_ndwi.tif'),
                   os.path.join(raster_dir, 'bf_ndwi.tif'))
