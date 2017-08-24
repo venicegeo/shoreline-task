@@ -1,6 +1,6 @@
 {
     "name": "ShorelineDetection_beta",
-    "version": "0.0.6",
+    "version": "0.0.15",
     "description": "Writes tide prediction JSON, shoreline GeoJSON, and NDWI GeoTIFF.",
     "properties": {
         "isPublic": true,
@@ -8,27 +8,9 @@
     },
     "inputPortDescriptors": [
         {
-            "name": "lat",
+            "name": "cat_id",
             "type": "string",
-            "description": "Latitude of image centroid (tide prediction).",
-            "required": true
-        },
-        {
-            "name": "lon",
-            "type": "string",
-            "description": "Longitude of image centroid (tide prediction).",
-            "required": true
-        },
-        {
-            "name": "dtg",
-            "type": "string",
-            "description": "Date time group (Y-m-d-H-M) of image collection (tide prediction).",
-            "required": true
-        },
-        {
-            "name": "meta",
-            "type": "string",
-            "description": "Acquisition metadata.",
+            "description": "Catalog ID of the image to be processed.",
             "required": true
         },
         {
