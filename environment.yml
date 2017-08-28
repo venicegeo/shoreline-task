@@ -11,6 +11,13 @@ dependencies:
   - glob2
   # bf-tideprediction dependencies
   - dill
+  - requests
+  - future
+  - configparser
+  - pyjwt
+  - shapely
+  - dateutil
   - pip:
     - pytides
     - geojson
+    - gbdx-auth
