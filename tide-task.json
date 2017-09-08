@@ -1,6 +1,6 @@
 {
     "name": "ShorelineDetection_beta",
-    "version": "0.0.13",
+    "version": "0.0.15",
     "description": "Writes tide prediction JSON, shoreline GeoJSON, and NDWI GeoTIFF.",
     "properties": {
         "isPublic": true,
