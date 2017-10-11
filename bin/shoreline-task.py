@@ -284,8 +284,12 @@ class ShorelineTask(GbdxTaskInterface):
         }
 
         platform = record.get('properties').get('platformName')
+        vendor = record.get('properties').get('vendor')
+        bands = record.get('properties').get('imageBands')
         print("Platform detected as", platform)
-        if platform in ('WORLDVIEW02', 'WORLDVIEW03'):
+        print("Vendor detected as", vendor)
+        print("Image bands detected as", bands)
+        if vendor == 'DigitalGlobe' and bands == 'PAN_MS1_MS2':
             all_lower = glob2.glob('%s/**/*.tif' % img)
             all_upper = glob2.glob('%s/**/*.TIF' % img)
             all_files = all_lower + all_upper
